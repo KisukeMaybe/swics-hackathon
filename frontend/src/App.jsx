@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Heart, X, RotateCcw, ChefHat } from "lucide-react";
 import { SwipeCard } from "./components/SwipeCard";
 import { MealSummary } from "./components/MealSummary";
+import { MealSuggestion } from "./components/MealSuggestion";
 
 const INGREDIENTS = [
   {
@@ -254,6 +255,9 @@ export default function App() {
         onRemove={handleRemoveIngredient}
         onReset={handleReset}
       />
+
+      {/* Meal Suggestions */}
+      <MealSuggestion selectedIngredients={selectedIngredients} />
     </div>
   );
 }

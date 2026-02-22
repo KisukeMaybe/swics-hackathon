@@ -15,7 +15,7 @@ export function MealSummary({ selectedIngredients, onRemove, onReset }) {
       className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-6"
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl">Your Meal</h3>
+        <h3 className="text-xl font-semibold text-gray-900">Your Meal</h3>
         <button
           onClick={onReset}
           className="text-sm text-gray-500 hover:text-gray-700"
@@ -39,7 +39,7 @@ export function MealSummary({ selectedIngredients, onRemove, onReset }) {
               className="w-12 h-12 rounded-lg object-cover"
             />
             <div className="flex-1">
-              <p className="text-sm">{ingredient.name}</p>
+              <p className="text-sm text-gray-800">{ingredient.name}</p>
               <p className="text-xs text-gray-500">{ingredient.calories} cal</p>
             </div>
             <button
@@ -55,11 +55,11 @@ export function MealSummary({ selectedIngredients, onRemove, onReset }) {
       <div className="border-t pt-4">
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Total Calories</span>
-          <span className="text-lg">{totalCalories} cal</span>
+          <span className="text-lg text-gray-600">{totalCalories} cal</span>
         </div>
         <div className="flex justify-between items-center mt-2">
           <span className="text-sm text-gray-600">Ingredients</span>
-          <span className="text-lg">{selectedIngredients.length}</span>
+          <span className="text-lg text-gray-600">{selectedIngredients.length}</span>
         </div>
       </div>
     </motion.div>

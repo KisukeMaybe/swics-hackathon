@@ -132,16 +132,18 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 flex flex-col items-center justify-center p-4">
       {/* Header */}
-      <div className="mb-8 text-center">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <ChefHat className="w-8 h-8 text-orange-500" />
-          <h1 className="text-4xl">MealSwipe</h1>
-        </div>
-        <p className="text-gray-600">Swipe right to add, left to skip</p>
+      <div className="mb-6 text-center">
+        <div className="flex items-center justify-center gap-2 mb-1">
+        <ChefHat className="w-7 h-7 text-orange-500" />
+        <h1 className="text-3xl font-semibold text-gray-900">MealSwipe</h1>
       </div>
+      <p className="text-sm text-gray-600">
+      Swipe right to add, left to skip
+      </p>
+    </div>
 
       {/* Card Stack Area */}
-      <div className="relative w-full max-w-sm h-[500px] mb-8">
+      <div className="relative w-full max-w-sm h-[400px] mb-8">
         <AnimatePresence>
           {!isFinished && currentIngredient && (
             <motion.div

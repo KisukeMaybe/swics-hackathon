@@ -1,182 +1,139 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, X, RotateCcw, ChefHat } from "lucide-react";
 import { SwipeCard } from "./components/SwipeCard";
 import { MealSummary } from "./components/MealSummary";
 import { MealSuggestion } from "./components/MealSuggestion";
 
-const INGREDIENTS = [
-  {
-    id: 1,
-    name: "Tomatoes",
-    category: "Vegetable",
-    image: "https://images.unsplash.com/photo-1560433802-62c9db426a4d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcmVzaCUyMHRvbWF0b2VzJTIwdmVnZXRhYmxlfGVufDF8fHx8MTc3MTc1OTg0MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    calories: 22,
-  },
-  {
-    id: 2,
-    name: "Chicken Breast",
-    category: "Protein",
-    image: "https://images.unsplash.com/photo-1633096013004-e2cb4023b560?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaGlja2VuJTIwYnJlYXN0JTIwbWVhdHxlbnwxfHx8fDE3NzE3MjUzMjR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    calories: 165,
-  },
-  {
-    id: 3,
-    name: "Lettuce",
-    category: "Vegetable",
-    image: "https://images.unsplash.com/photo-1741515042603-70545daeb0c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcmVzaCUyMGxldHR1Y2UlMjBncmVlbnN8ZW58MXx8fHwxNzcxNzU5ODQxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    calories: 5,
-  },
-  {
-    id: 4,
-    name: "Avocado",
-    category: "Fruit",
-    image: "https://images.unsplash.com/photo-1758279745324-ff5ed34200a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhdm9jYWRvJTIwaGFsZnxlbnwxfHx8fDE3NzE3NTk4NDF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    calories: 240,
-  },
-  {
-    id: 5,
-    name: "Cheese",
-    category: "Dairy",
-    image: "https://images.unsplash.com/photo-1757857755327-5b38c51a0302?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaGVlc2UlMjBibG9ja3xlbnwxfHx8fDE3NzE2OTI5OTV8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    calories: 113,
-  },
-  {
-    id: 6,
-    name: "Pasta",
-    category: "Carbs",
-    image: "https://images.unsplash.com/photo-1751182471056-ecd29a41f339?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXN0YSUyMG5vb2RsZXMlMjBkcnl8ZW58MXx8fHwxNzcxNzU5ODQxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    calories: 131,
-  },
-  {
-    id: 7,
-    name: "Bell Peppers",
-    category: "Vegetable",
-    image: "https://images.unsplash.com/photo-1509377244-b9820f59c12f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiZWxsJTIwcGVwcGVycyUyMGNvbG9yZnVsfGVufDF8fHx8MTc3MTc1OTg0Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    calories: 31,
-  },
-  {
-    id: 8,
-    name: "Salmon",
-    category: "Protein",
-    image: "https://images.unsplash.com/photo-1600186321656-eaffd828d536?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcmVzaCUyMHNhbG1vbiUyMGZpc2h8ZW58MXx8fHwxNzcxNzQ3NDE1fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    calories: 206,
-  },
-  {
-    id: 9,
-    name: "Onion",
-    category: "Vegetable",
-    image: "https://images.unsplash.com/photo-1759421278111-739eebcb6c76?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvbmlvbiUyMGJ1bGJzfGVufDF8fHx8MTc3MTc1OTg0Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    calories: 40,
-  },
-  {
-    id: 10,
-    name: "Garlic",
-    category: "Seasoning",
-    image: "https://images.unsplash.com/photo-1638521476152-d0a01eaa1207?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYXJsaWMlMjBjbG92ZXN8ZW58MXx8fHwxNzcxNzU5ODQyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    calories: 4,
-  },
-  {
-    id: 11,
-    name: "Mushrooms",
-    category: "Vegetable",
-    image: "https://images.unsplash.com/photo-1552825897-bb5efa86eab1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmcmVzaCUyMG11c2hyb29tc3xlbnwxfHx8fDE3NzE3NTk4NDN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    calories: 22,
-  },
-  {
-    id: 12,
-    name: "Rice",
-    category: "Carbs",
-    image: "https://images.unsplash.com/photo-1743674452796-ad8d0cf38005?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyaWNlJTIwZ3JhaW5zJTIwd2hpdGV8ZW58MXx8fHwxNzcxNzU5ODQ0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    calories: 130,
-  },
-];
+const API_BASE = "http://localhost:3001";
 
 export default function App() {
+  const [ingredients, setIngredients] = useState([]);
+  const [loadingIngredients, setLoadingIngredients] = useState(true);
+  const [ingredientsError, setIngredientsError] = useState("");
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
   const [exitDirection, setExitDirection] = useState(null);
 
-  const currentIngredient = INGREDIENTS[currentIndex];
-  const isFinished = currentIndex >= INGREDIENTS.length;
+  const loadIngredients = async () => {
+    setLoadingIngredients(true);
+    setIngredientsError("");
+
+    try {
+      const res = await fetch(`${API_BASE}/api/ingredients?count=12`);
+      if (!res.ok) throw new Error("Failed to fetch ingredients");
+      const data = await res.json();
+
+      setIngredients(data.ingredients || []);
+      setCurrentIndex(0);
+      setSelectedIngredients([]);
+      setExitDirection(null);
+    } catch (e) {
+      setIngredientsError(e.message);
+    } finally {
+      setLoadingIngredients(false);
+    }
+  };
+
+  useEffect(() => {
+    loadIngredients();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const currentIngredient = ingredients[currentIndex];
+  const isFinished = currentIndex >= ingredients.length;
 
   const handleSwipe = (direction) => {
+    if (isFinished || !currentIngredient) return;
+
     setExitDirection(direction);
-    
+
     if (direction === "right") {
       setSelectedIngredients((prev) => [...prev, currentIngredient]);
     }
-    
+
     setTimeout(() => {
       setCurrentIndex((prev) => prev + 1);
       setExitDirection(null);
-    }, 300);
+    }, 250);
   };
 
   const handleButtonClick = (direction) => {
-    if (!isFinished) {
-      handleSwipe(direction);
-    }
+    handleSwipe(direction);
   };
 
   const handleRemoveIngredient = (id) => {
     setSelectedIngredients((prev) => prev.filter((ing) => ing.id !== id));
   };
 
-  const handleReset = () => {
-    setCurrentIndex(0);
-    setSelectedIngredients([]);
-    setExitDirection(null);
+  const handleReset = async () => {
+    await loadIngredients();
   };
+
+  if (loadingIngredients) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-gray-700">Generating ingredients...</div>
+      </div>
+    );
+  }
+
+  if (ingredientsError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="bg-white rounded-2xl shadow-lg p-6 max-w-sm w-full">
+          <p className="text-gray-900 font-semibold mb-2">
+            Couldn’t load ingredients
+          </p>
+          <p className="text-gray-600 text-sm mb-4">{ingredientsError}</p>
+          <button
+            className="bg-orange-500 text-white px-4 py-2 rounded-lg"
+            onClick={handleReset}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-pink-50 to-purple-50 flex flex-col items-center justify-center p-4">
       {/* Header */}
       <div className="mb-6 text-center">
         <div className="flex items-center justify-center gap-2 mb-1">
-        <ChefHat className="w-7 h-7 text-orange-500" />
-        <h1 className="text-3xl font-semibold text-gray-900">MealSwipe</h1>
+          <ChefHat className="w-7 h-7 text-orange-500" />
+          <h1 className="text-3xl font-semibold text-gray-900">MealSwipe</h1>
+        </div>
+        <p className="text-sm text-gray-600">
+          Swipe right to add, left to skip
+        </p>
       </div>
-      <p className="text-sm text-gray-600">
-      Swipe right to add, left to skip
-      </p>
-    </div>
 
       {/* Card Stack Area */}
-      <div className="relative w-full max-w-sm h-[400px] mb-8">
+      <div className="relative w-full max-w-sm h-[400px] mb-6">
         <AnimatePresence>
           {!isFinished && currentIngredient && (
             <motion.div
               key={currentIngredient.id}
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{
-                x: exitDirection === "left" ? -300 : exitDirection === "right" ? 300 : 0,
+                x: exitDirection === "left" ? -320 : 320,
                 opacity: 0,
-                transition: { duration: 0.3 },
+                transition: { duration: 0.25 },
               }}
             >
-              <SwipeCard
-                ingredient={currentIngredient}
-                onSwipe={handleSwipe}
-              />
+              <SwipeCard ingredient={currentIngredient} onSwipe={handleSwipe} />
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Next card preview */}
-        {!isFinished && INGREDIENTS[currentIndex + 1] && (
-          <div className="absolute w-full max-w-sm" style={{ zIndex: -1 }}>
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden opacity-50 scale-95">
-              <div className="h-96 bg-gray-200" />
-            </div>
-          </div>
-        )}
-
         {/* Finished State */}
         {isFinished && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             className="absolute inset-0 flex items-center justify-center"
           >
@@ -184,7 +141,7 @@ export default function App() {
               <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <ChefHat className="w-10 h-10 text-green-600" />
               </div>
-              <h2 className="text-2xl mb-2">All Done!</h2>
+              <h2 className="text-2xl mb-2 text-gray-900">All Done!</h2>
               <p className="text-gray-600 mb-6">
                 {selectedIngredients.length > 0
                   ? `You've created a meal with ${selectedIngredients.length} ingredients!`
@@ -202,21 +159,43 @@ export default function App() {
         )}
       </div>
 
+      {/* Progress Indicator */}
+      {!isFinished && ingredients.length > 0 && (
+        <div className="w-full max-w-sm mb-5">
+          <div className="flex items-center justify-between text-xs text-gray-600 mb-2 px-1">
+            <span>Progress</span>
+            <span>
+              {currentIndex + 1} / {ingredients.length}
+            </span>
+          </div>
+          <div className="h-2 bg-white/70 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-orange-500"
+              initial={{ width: 0 }}
+              animate={{
+                width: `${((currentIndex + 1) / ingredients.length) * 100}%`,
+              }}
+              transition={{ duration: 0.25 }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Action Buttons */}
       {!isFinished && (
-        <div className="flex items-center gap-6 mb-8">
+        <div className="flex items-center gap-6 mb-6">
           <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.92 }}
             onClick={() => handleButtonClick("left")}
             className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center text-red-500 hover:bg-red-50 transition-colors"
           >
             <X className="w-8 h-8" />
           </motion.button>
-          
+
           <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.92 }}
             onClick={handleReset}
             className="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors"
           >
@@ -224,30 +203,13 @@ export default function App() {
           </motion.button>
 
           <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.92 }}
             onClick={() => handleButtonClick("right")}
             className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center text-green-500 hover:bg-green-50 transition-colors"
           >
             <Heart className="w-8 h-8" fill="currentColor" />
           </motion.button>
-        </div>
-      )}
-
-      {/* Progress Indicator */}
-      {!isFinished && (
-        <div className="mb-8 text-center">
-          <p className="text-sm text-gray-600">
-            {currentIndex + 1} / {INGREDIENTS.length}
-          </p>
-          <div className="w-64 h-2 bg-white rounded-full overflow-hidden mt-2">
-            <motion.div
-              className="h-full bg-orange-500"
-              initial={{ width: 0 }}
-              animate={{ width: `${((currentIndex + 1) / INGREDIENTS.length) * 100}%` }}
-              transition={{ duration: 0.3 }}
-            />
-          </div>
         </div>
       )}
 

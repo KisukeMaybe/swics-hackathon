@@ -9,15 +9,71 @@ function extractJson(text) {
   return JSON.parse(text.slice(start, end + 1));
 }
 
-export async function generateMeals(selectedIngredients) {
+function normalizeMeals(payload) {
+  const rawMeals = Array.isArray(payload?.meals) ? payload.meals : [];
+
+  return rawMeals.slice(0, 3).map((m) => {
+    const title = String(m?.title || "Meal").trim();
+    const description = String(m?.description || "").trim();
+
+    const timeMinutesRaw = Number(m?.time_minutes);
+    const time_minutes = Number.isFinite(timeMinutesRaw)
+      ? Math.max(1, Math.min(120, Math.round(timeMinutesRaw)))
+      : 15;
+
+    const difficultyRaw = String(m?.difficulty || "Easy").trim();
+    const difficulty =
+      difficultyRaw === "Medium" || difficultyRaw === "Hard"
+        ? difficultyRaw
+        : "Easy";
+
+    // accept either "uses" or "ingredients_used"
+    const used = Array.isArray(m?.ingredients_used)
+      ? m.ingredients_used
+      : Array.isArray(m?.uses)
+        ? m.uses
+        : [];
+
+    const ingredients_used = used
+      .map((x) => String(x).trim())
+      .filter(Boolean)
+      .slice(0, 12);
+
+    const missing = Array.isArray(m?.missing) ? m.missing : [];
+    const missing_ingredients = missing
+      .map((x) => String(x).trim())
+      .filter(Boolean)
+      .slice(0, 6);
+
+    return {
+      title,
+      description,
+      time_minutes,
+      difficulty,
+      ingredients_used,
+      missing_ingredients,
+    };
+  });
+}
+
+export async function generateMeals(ingredients) {
   const ai = getGeminiClient();
 
-  const names = (selectedIngredients || [])
-    .map((x) => x?.name)
-    .filter(Boolean);
+  const items = Array.isArray(ingredients) ? ingredients : [];
+
+  // The smaller payload from frontend: [{ name, category, calories }]
+  const names = items
+    .map((x) => String(x?.name || "").trim())
+    .filter(Boolean)
+    .slice(0, 25);
+
+  if (names.length === 0) {
+    return { meals: [] };
+  }
 
   const prompt = `
-Return ONLY JSON:
+Return ONLY JSON in this exact shape:
+
 {
   "meals": [
     {
@@ -25,8 +81,8 @@ Return ONLY JSON:
       "description": "string",
       "time_minutes": number,
       "difficulty": "Easy|Medium|Hard",
-      "uses": ["ingredient names used"],
-      "missing": ["0-4 missing ingredients"]
+      "ingredients_used": ["ingredient names used"],
+      "missing_ingredients": ["0-4 missing ingredients"]
     }
   ]
 }
@@ -34,14 +90,18 @@ Return ONLY JSON:
 Selected ingredients: ${JSON.stringify(names)}
 
 Generate exactly 3 quick meals (<= 30 minutes).
-Keep missing items minimal and generic.
-JSON only. No markdown.
+Keep missing items minimal and generic (salt, pepper, olive oil, lemon, soy sauce, etc.).
+JSON only. No markdown. No extra text.
 `;
 
   const resp = await ai.models.generateContent({
     model: "gemini-3-flash-preview",
     contents: prompt,
+    generationConfig: { temperature: 0.4 },
   });
 
-  return extractJson(resp.text);
+  const parsed = extractJson(resp.text);
+  const meals = normalizeMeals(parsed);
+
+  return { meals };
 }

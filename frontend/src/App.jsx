@@ -10,8 +10,12 @@ import { MealSuggestion } from "./components/MealSuggestion";
  * fruits, veg, meat, dairy, carbs, protein
  *
  * Calories are approx per 100g (good enough for demo).
- * Images use Unsplash Source (no API key needed).
+ * Images use direct images.unsplash.com URLs (more reliable than source.unsplash.com).
  */
+function unsplash(photoId) {
+  return `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=900&q=80`;
+}
+
 const INGREDIENTS = [
   // Fruits
   {
@@ -19,42 +23,42 @@ const INGREDIENTS = [
     name: "Apple",
     category: "Fruit",
     calories: 52,
-    image: "https://source.unsplash.com/featured/?apple,fruit",
+    image: unsplash("photo-1560806887-1e4cd0b6cbd6"),
   },
   {
     id: "fruit-banana",
     name: "Banana",
     category: "Fruit",
     calories: 89,
-    image: "https://source.unsplash.com/featured/?banana,fruit",
+    image: unsplash("photo-1571771894821-ce9b6c11b08e"),
   },
   {
     id: "fruit-avocado",
     name: "Avocado",
     category: "Fruit",
     calories: 160,
-    image: "https://source.unsplash.com/featured/?avocado",
+    image: unsplash("photo-1523049673857-eb18f1d7b578"),
   },
   {
     id: "fruit-orange",
     name: "Orange",
     category: "Fruit",
     calories: 47,
-    image: "https://source.unsplash.com/featured/?orange,fruit",
+    image: unsplash("photo-1547514701-42782101795e"),
   },
   {
     id: "fruit-strawberries",
     name: "Strawberries",
     category: "Fruit",
     calories: 32,
-    image: "https://source.unsplash.com/featured/?strawberries",
+    image: unsplash("photo-1464965911861-746a04b4bca6"),
   },
   {
     id: "fruit-blueberries",
     name: "Blueberries",
     category: "Fruit",
     calories: 57,
-    image: "https://source.unsplash.com/featured/?blueberries",
+    image: unsplash("photo-1464965911861-746a04b4bca6"),
   },
 
   // Veg
@@ -63,70 +67,70 @@ const INGREDIENTS = [
     name: "Tomatoes",
     category: "Veg",
     calories: 18,
-    image: "https://source.unsplash.com/featured/?tomatoes",
+    image: unsplash("photo-1560433802-62c9db426a4d"),
   },
   {
     id: "veg-lettuce",
     name: "Lettuce",
     category: "Veg",
     calories: 15,
-    image: "https://source.unsplash.com/featured/?lettuce",
+    image: unsplash("photo-1540420773420-3366772f4999"),
   },
   {
     id: "veg-onion",
     name: "Onion",
     category: "Veg",
     calories: 40,
-    image: "https://source.unsplash.com/featured/?onion",
+    image: unsplash("photo-1518977676601-b53f82aba655"),
   },
   {
     id: "veg-garlic",
     name: "Garlic",
     category: "Veg",
     calories: 149,
-    image: "https://source.unsplash.com/featured/?garlic",
+    image: unsplash("photo-1638521476152-d0a01eaa1207"),
   },
   {
     id: "veg-bell-pepper",
     name: "Bell Pepper",
     category: "Veg",
     calories: 31,
-    image: "https://source.unsplash.com/featured/?bell-pepper",
+    image: unsplash("photo-1509377244-b9820f59c12f"),
   },
   {
     id: "veg-cucumber",
     name: "Cucumber",
     category: "Veg",
     calories: 16,
-    image: "https://source.unsplash.com/featured/?cucumber",
+    image: unsplash("photo-1568584711271-54f2a4b2f7b0"),
   },
   {
     id: "veg-mushrooms",
     name: "Mushrooms",
     category: "Veg",
     calories: 22,
-    image: "https://source.unsplash.com/featured/?mushrooms",
+    image: unsplash("photo-1552825897-bb5efa86eab1"),
   },
   {
     id: "veg-broccoli",
     name: "Broccoli",
     category: "Veg",
     calories: 34,
-    image: "https://source.unsplash.com/featured/?broccoli",
+    image: unsplash("photo-1459411552884-841db9b3cc2a"),
   },
   {
     id: "veg-spinach",
     name: "Spinach",
     category: "Veg",
     calories: 23,
-    image: "https://source.unsplash.com/featured/?spinach",
+    image: unsplash("photo-1576045057995-568f588f82fb"),
   },
   {
     id: "veg-carrot",
     name: "Carrot",
     category: "Veg",
     calories: 41,
-    image: "https://source.unsplash.com/featured/?carrot",
+    image: unsplash("photo-1447175008436-054170c2e979"),
   },
 
   // Meat
@@ -135,35 +139,35 @@ const INGREDIENTS = [
     name: "Chicken Breast",
     category: "Meat",
     calories: 165,
-    image: "https://source.unsplash.com/featured/?chicken-breast",
+    image: unsplash("photo-1633096013004-e2cb4023b560"),
   },
   {
     id: "meat-beef",
     name: "Beef (Lean)",
     category: "Meat",
     calories: 250,
-    image: "https://source.unsplash.com/featured/?beef",
+    image: unsplash("photo-1603048297172-c92544798d5a"),
   },
   {
     id: "meat-turkey",
     name: "Turkey",
     category: "Meat",
     calories: 135,
-    image: "https://source.unsplash.com/featured/?turkey,meat",
+    image: unsplash("photo-1604908554162-3c6c2f0d2ef0"),
   },
   {
     id: "meat-salmon",
     name: "Salmon",
     category: "Meat",
     calories: 208,
-    image: "https://source.unsplash.com/featured/?salmon",
+    image: unsplash("photo-1600186321656-eaffd828d536"),
   },
   {
     id: "meat-tuna",
     name: "Tuna",
     category: "Meat",
     calories: 132,
-    image: "https://source.unsplash.com/featured/?tuna",
+    image: unsplash("photo-1534766555764-ce878a5e3a2b"),
   },
 
   // Dairy
@@ -172,28 +176,28 @@ const INGREDIENTS = [
     name: "Milk",
     category: "Dairy",
     calories: 42,
-    image: "https://source.unsplash.com/featured/?milk",
+    image: unsplash("photo-1585238342028-4c5b44f1b3b8"),
   },
   {
     id: "dairy-greek-yogurt",
     name: "Greek Yogurt",
     category: "Dairy",
     calories: 59,
-    image: "https://source.unsplash.com/featured/?greek-yogurt",
+    image: unsplash("photo-1542444459-db63c0a2a2b2"),
   },
   {
     id: "dairy-cheese",
     name: "Cheese",
     category: "Dairy",
     calories: 402,
-    image: "https://source.unsplash.com/featured/?cheese",
+    image: unsplash("photo-1546443046-ed1ce6ffd1ab"),
   },
   {
     id: "dairy-mozzarella",
     name: "Mozzarella",
     category: "Dairy",
     calories: 280,
-    image: "https://source.unsplash.com/featured/?mozzarella",
+    image: unsplash("photo-1604908176997-125f25cc500f"),
   },
 
   // Carbs
@@ -202,42 +206,42 @@ const INGREDIENTS = [
     name: "Rice",
     category: "Carbs",
     calories: 130,
-    image: "https://source.unsplash.com/featured/?rice",
+    image: unsplash("photo-1604909052743-94e838986d24"),
   },
   {
     id: "carbs-pasta",
     name: "Pasta",
     category: "Carbs",
     calories: 131,
-    image: "https://source.unsplash.com/featured/?pasta",
+    image: unsplash("photo-1523986371872-9d3ba2e2f5f3"),
   },
   {
     id: "carbs-bread",
     name: "Bread",
     category: "Carbs",
     calories: 265,
-    image: "https://source.unsplash.com/featured/?bread",
+    image: unsplash("photo-1549931319-a545dcf3bc73"),
   },
   {
     id: "carbs-oats",
     name: "Oats",
     category: "Carbs",
     calories: 389,
-    image: "https://source.unsplash.com/featured/?oats",
+    image: unsplash("photo-1514996937319-344454492b37"),
   },
   {
     id: "carbs-potato",
     name: "Potato",
     category: "Carbs",
     calories: 77,
-    image: "https://source.unsplash.com/featured/?potato",
+    image: unsplash("photo-1567306226416-28f0efdc88ce"),
   },
   {
     id: "carbs-tortilla",
     name: "Tortilla Wrap",
     category: "Carbs",
     calories: 310,
-    image: "https://source.unsplash.com/featured/?tortilla-wrap",
+    image: unsplash("photo-1615870216519-2f9fa575fa5c"),
   },
 
   // Protein (non-meat)
@@ -246,42 +250,42 @@ const INGREDIENTS = [
     name: "Eggs",
     category: "Protein",
     calories: 155,
-    image: "https://source.unsplash.com/featured/?eggs",
+    image: unsplash("photo-1582722872445-44dc5f7e3c8f"),
   },
   {
     id: "protein-tofu",
     name: "Tofu",
     category: "Protein",
     calories: 76,
-    image: "https://source.unsplash.com/featured/?tofu",
+    image: unsplash("photo-1546069901-ba9599a7e63c"),
   },
   {
     id: "protein-chickpeas",
     name: "Chickpeas",
     category: "Protein",
     calories: 164,
-    image: "https://source.unsplash.com/featured/?chickpeas",
+    image: unsplash("photo-1604908177522-0403d2e8c3d6"),
   },
   {
     id: "protein-lentils",
     name: "Lentils",
     category: "Protein",
     calories: 116,
-    image: "https://source.unsplash.com/featured/?lentils",
+    image: unsplash("photo-1589927986089-35812388d1f4"),
   },
   {
     id: "protein-black-beans",
     name: "Black Beans",
     category: "Protein",
     calories: 132,
-    image: "https://source.unsplash.com/featured/?black-beans",
+    image: unsplash("photo-1604908554275-0f3b41b1c18d"),
   },
   {
     id: "protein-peanut-butter",
     name: "Peanut Butter",
     category: "Protein",
     calories: 588,
-    image: "https://source.unsplash.com/featured/?peanut-butter",
+    image: unsplash("photo-1585238342028-4c5b44f1b3b8"),
   },
 ];
 
@@ -333,7 +337,6 @@ export default function App() {
 
     if (direction === "right") {
       setSelectedIngredients((prev) => {
-        // prevent duplicates
         if (prev.some((x) => x.id === currentIngredient.id)) return prev;
         return [...prev, currentIngredient];
       });
